@@ -1,2 +1,5 @@
+.venv
+airflow/.env
+__pycache__
 venv_varsha
 .env
