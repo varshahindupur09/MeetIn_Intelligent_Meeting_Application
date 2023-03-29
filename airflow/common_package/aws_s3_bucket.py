@@ -1,12 +1,12 @@
 # %%
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 import boto3
 import boto3.s3
 
 
 # %%
-load_dotenv()
+# load_dotenv()
 
 # %%
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
@@ -29,16 +29,16 @@ class AWSS3Download:
         self.src_bucket = s3.Bucket(S3_BUCKET_NAME)
 
 
-    def get_all_files(self):
-        files_available = list()
+    def get_all_files(self, **kwargs):
+        files_available = []
 
         for object_summary in self.src_bucket.objects.filter(Prefix=  f'adhoc/'):
             file_name = object_summary.key.split('/')[-1]
-            files_available.append(file_name)
+            files_available.append(f"https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/{file_name}")
 
         return files_available
 
-    def move_file_to_processes_folder(self, filename):
+    def move_file_to_processes_folder(self,  filename, **kwargs):
         copy_source = {
             'Bucket': S3_BUCKET_NAME,
             'Key': f'adhoc/{filename}'
@@ -53,7 +53,9 @@ class AWSS3Download:
             print(e)
             return False
 
-    def store_transcript(self, audio_filename:str, text: str):
+    def store_transcript(self, audio_filename:str, text: str, **kwargs):
+        audio_filename = audio_filename.split('/')[-1]
+        print(audio_filename)
         file_name = audio_filename.split(".")[0] + ".txt"
 
         file = open(file_name, 'w')
@@ -68,14 +70,14 @@ class AWSS3Download:
 # %%
 aws = AWSS3Download()
 
-aws.move_file_to_processes_folder("podcast_2.mp3")
+# aws.move_file_to_processes_folder("podcast_2.mp3")
 
-# %%
+# # %%
 aws.get_all_files()
-# https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3
+# # https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3
 
-# %%
-aws.store_transcript("podcast_2.mp3", "test tims")
+# # %%
+# aws.store_transcript("podcast_2.mp3", "test tims")
 
 
 # %%
