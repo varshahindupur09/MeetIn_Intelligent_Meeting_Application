@@ -21,12 +21,16 @@ class OpenAIGPT:
                 messages = [
                     {'role': 'user', 'content': text}
                 ],
-                temperature = 0.75 
+                temperature = 0.75
             )
 
         print(completion.choices[0].message.content)
         return completion.choices[0].message.content
 
+
+    def geenrate_questions_for_adhoc(self, audio_file_with_transcribe: dict):
+         for key, value in audio_file_with_transcribe.items():
+            self.generate_questions_for_transcribed_text(value)
 
 
 # %%

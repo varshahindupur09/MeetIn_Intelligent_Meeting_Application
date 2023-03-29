@@ -1,2 +1,3 @@
 .venv
 airflow/.env
+__pycache__
