@@ -3,3 +3,4 @@ airflow/.env
 __pycache__
 venv_varsha
 .env
+.DS_Store
