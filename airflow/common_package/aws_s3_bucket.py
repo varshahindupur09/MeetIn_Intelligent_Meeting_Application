@@ -49,7 +49,7 @@ class AWSS3Download:
 
         for object_summary in self.src_bucket.objects.filter(Prefix=  f'batch/'):
             file_name = object_summary.key.split('/')[-1]
-            files_available.append(f"https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/{file_name}")
+            files_available.append(f"https://damg-team-5-assignment-4.s3.amazonaws.com/batch/{file_name}")
 
         return files_available
 
@@ -64,8 +64,26 @@ class AWSS3Download:
         }
 
         try:
-            self.src_bucket.copy(copy_source, f"adhoc-processed/{filename}")
+            self.src_bucket.copy(copy_source, f"processed-audio/{filename}")
             self.s3_client.delete_object(Bucket = S3_BUCKET_NAME, Key= "adhoc/" + filename)
+            
+            return True
+        except Exception as e:
+            print(e)
+            return False
+        
+    def move_file_to_batch_processes_folder(self,  filename, **kwargs):
+        filename = filename.split('/')[-1]
+        print(filename)
+
+        copy_source = {
+            'Bucket': S3_BUCKET_NAME,
+            'Key': f'batch/{filename}'
+        }
+
+        try:
+            self.src_bucket.copy(copy_source, f"processed-audio/{filename}")
+            self.s3_client.delete_object(Bucket = S3_BUCKET_NAME, Key= "batch/" + filename)
             
             return True
         except Exception as e:
@@ -91,10 +109,13 @@ class AWSS3Download:
         os.remove(file_name)
 
 
-    def store_adhoc_audio_with_transcription(self, audio_file_with_transcribe:dict):
+    def store_batch_audio_with_transcription(self, audio_file_with_transcribe:dict):
         for key, value in audio_file_with_transcribe.items():
             self.store_transcript(key, value)
 
+    def move_batch_audio_with_transcription(self, audio_file_with_transcribe:dict):
+        for key, value in audio_file_with_transcribe.items():
+            self.store_transcript(key, value)
 
 # %%
 # aws = AWSS3Download()

@@ -1,5 +1,6 @@
 # %%
 import whisper
+import ast
 
 
 # %%
@@ -12,25 +13,33 @@ class AudioTranscribe:
     def transcribe_adhoc_audio_link(self, audio_file_url, **kwargs) -> str:
 
         print("audio_file_url", audio_file_url)
-        
-        self.model = whisper.load_model("tiny")
-        result = self.model.transcribe(audio_file_url)
+
+        model = whisper.load_model("tiny")
+        result = model.transcribe(audio_file_url)
 
         print(result)
 
         return str(result["text"])
     
 
-    def transcribe_batch_audio_link(self, audio_file_urls, **kwargs) -> dict:
-        self.model = whisper.load_model("tiny")
+    def transcribe_batch_audio_link(self, audio_file_urls_string: str, **kwargs) -> dict:
+        model = whisper.load_model("tiny")
+    
+        audio_file_urls = ast.literal_eval(audio_file_urls_string)
 
-        result_with_files = {}
-        for file in audio_file_urls:
+        print("audio_file_urls", audio_file_urls)
+        print("audio_file_urls_length", len(audio_file_urls))
 
-            result = self.model.transcribe(file)
-            result_with_files[file] = str(result["text"])
+        result_with_files = dict()
+        for i in range(len(audio_file_urls)):
+            if "mp3" in audio_file_urls[i]:
+                result = model.transcribe(audio_file_urls[i])
+                result_with_files[audio_file_urls[i]] = str(result["text"])
+            else:
+                print("Not a valid file", audio_file_urls[i])
 
-        # print(result)
+
+        print(result_with_files)
 
         return result_with_files
 
@@ -40,6 +49,7 @@ class AudioTranscribe:
 # %%
 # transcribe = AudioTranscribe()
 # %%
+# "mp3" in "https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3"
 # transcribe.transcribe_adhoc_audio_link('https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3')
 
 # %%

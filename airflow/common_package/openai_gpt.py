@@ -1,10 +1,10 @@
 # %%
 import openai
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
 # %%
-load_dotenv()
+# load_dotenv()
 
 
 # %%

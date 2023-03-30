@@ -34,7 +34,7 @@ dag = DAG(
 with dag:
 
 
-    get_all_audio_files_from_s3 = PythonOperator(
+    get_all_batch_audio_files_from_s3 = PythonOperator(
         task_id='get_all_batch_audio_files_from_s3',
         python_callable= aws_cloud.get_all_batch_files,
         provide_context=True,
@@ -46,10 +46,30 @@ with dag:
     transcribe_all_audio = PythonOperator(
         task_id='transcribe_all_batch_audio',
         python_callable= audio_transcribe.transcribe_batch_audio_link,
-        op_kwargs={"audio_file_url": "{{ ti.xcom_pull(task_ids='get_all_audio_files_from_s3') }}"},
+        op_kwargs={"audio_file_urls_string": "{{ ti.xcom_pull(task_ids='get_all_batch_audio_files_from_s3') }}"},
         provide_context=True,
         do_xcom_push=True,
         dag=dag,
     )
 
-    get_all_audio_files_from_s3 >> transcribe_all_audio
+
+
+    moving_all_transcription_to_aws_bucket = PythonOperator(
+        task_id='moving_transcription_to_aws_bucket',
+        python_callable= aws_cloud.store_batch_audio_with_transcription,
+        op_kwargs={"audio_file_with_transcribe": "{{ ti.xcom_pull(task_ids='transcribe_all_audio')}}"},
+        provide_context=True,
+        dag=dag,
+    )
+
+
+    moving_all_audio_file_to_proccessd_aws_bucket = PythonOperator(
+        task_id='moving_audio_file_to_proccessd_aws_bucket',
+        python_callable= aws_cloud.move_batch_audio_with_transcription,
+        op_kwargs={"audio_file_with_transcribe": "{{ ti.xcom_pull(task_ids='transcribe_all_audio')}}"},
+        provide_context=True,
+        dag=dag,
+    )
+
+
+    get_all_batch_audio_files_from_s3 >> transcribe_all_audio >> [moving_all_audio_file_to_proccessd_aws_bucket, moving_all_audio_file_to_proccessd_aws_bucket]
