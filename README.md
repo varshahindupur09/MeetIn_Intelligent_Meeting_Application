@@ -4,9 +4,12 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
 # Links to the Live application
 
 ** Airflow: ** http://ec2-52-45-138-255.compute-1.amazonaws.com:8080/
+
 ** Streamlit: ** http://ec2-52-45-138-255.compute-1.amazonaws.com/
+
 ** FastAPI: ** http://ec2-52-45-138-255.compute-1.amazonaws.com:8000/docs
-** Codelabs: ** https://docs.google.com/document/d/1KwFY_zq4X5mGg0K8itpnN3hzrCtn11xF6HUpXBjeMa0/edit#heading=h.gwvwymsk8cmy
+
+** Codelabs: ** https://docs.google.com/document/d/1KwFY_zq4X5mGg0K8itpnN3hzrCtn11xF6HUpXBjeMa0/edit?usp=sharing
 
 # To execute this project, you will need:
 
