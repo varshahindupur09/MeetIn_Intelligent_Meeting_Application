@@ -1,0 +1,33 @@
+name: Deploy on EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploying
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      
+      - name: Executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_EC2_HOSTNAME }}
+          username: ${{ secrets.AWS_EC2_USER_NAME }}
+          key: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
+          script: |
+              cd /home/ubuntu/Assignment-04
+              git checkout main
+              git fetch --all
+              git reset --hard origin/main
+              git pull origin main
+              sudo su
+              sudo systemctl start docker
+              sudo docker-compose down --volumes --rmi all
+              sudo docker-compose build
+              sudo docker-compose up -d
+          

@@ -10,25 +10,19 @@ class AudioTranscribe:
     #     self.model = whisper.load_model("base")
 
 
-    def transcribe_adhoc_audio_link(self, audio_file_url, **kwargs) -> str:
-
-        print("audio_file_url", audio_file_url)
-
+    def transcribe_adhoc_audio_link(self, **kwargs) -> str:
         model = whisper.load_model("tiny")
-        result = model.transcribe(audio_file_url)
+        result = model.transcribe(kwargs['dag_run'].conf.get('audio_file_url'))
 
         print(result)
 
         return str(result["text"])
     
 
-    def transcribe_batch_audio_link(self, audio_file_urls_string: str, **kwargs) -> dict:
+    def transcribe_batch_audio_link(self, audio_file_urls_string: str, **kwargs) -> str:
         model = whisper.load_model("tiny")
     
         audio_file_urls = ast.literal_eval(audio_file_urls_string)
-
-        print("audio_file_urls", audio_file_urls)
-        print("audio_file_urls_length", len(audio_file_urls))
 
         result_with_files = dict()
         for i in range(len(audio_file_urls)):
@@ -38,10 +32,7 @@ class AudioTranscribe:
             else:
                 print("Not a valid file", audio_file_urls[i])
 
-
-        print(result_with_files)
-
-        return result_with_files
+        return str(result_with_files)
 
 
 

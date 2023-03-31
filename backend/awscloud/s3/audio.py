@@ -30,19 +30,21 @@ s3 = session.resource('s3')
 src_bucket = s3.Bucket(aws_bucket_name)
 
 # %%
-def upload_file_to_adhoc(file) -> bool:
+def upload_file_to_adhoc(file):
 
     try:   
         curr_time = round(time.time()*1000)
         file_name_only = file.filename.rsplit('.', 1)[0]
+        file_extension = file.filename.rsplit('.', 1)[1]
+        new_file_name = f"{file_name_only}-{curr_time}.{file_extension}"
 
-        s3_client.upload_fileobj(file.file, Bucket= aws_bucket_name, Key = f"adhoc/{file_name_only}-{curr_time}.mp3")
+        s3_client.upload_fileobj(file.file, Bucket= aws_bucket_name, Key = f"adhoc/{new_file_name}")
 
-        return True
+        return new_file_name
 
     except Exception as e:
         print(e)
-        return False
+        return None
     
 
 def get_processed_audio_files() -> list:

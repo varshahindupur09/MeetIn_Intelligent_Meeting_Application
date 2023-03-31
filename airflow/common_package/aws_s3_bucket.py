@@ -3,6 +3,8 @@
 import os
 import boto3
 import boto3.s3
+import ast
+
 
 
 # %%
@@ -50,12 +52,15 @@ class AWSS3Download:
 
         for object_summary in self.src_bucket.objects.filter(Prefix=  f'batch/'):
             file_name = object_summary.key.split('/')[-1]
-            files_available.append(f"https://damg-team-5-assignment-4.s3.amazonaws.com/batch/{file_name}")
+            if len(file_name) != 0:
+                files_available.append(f"https://damg-team-5-assignment-4.s3.amazonaws.com/batch/{file_name}")
 
+        print(files_available)
         return files_available
 
 
-    def move_file_to_adhoc_processes_folder(self,  filename, **kwargs):
+    def move_file_to_adhoc_processes_folder(self, **kwargs):
+        filename = kwargs['dag_run'].conf.get('audio_file_url')
         filename = filename.split('/')[-1]
         print(filename)
 
@@ -73,7 +78,7 @@ class AWSS3Download:
             print(e)
             return False
         
-    def move_file_to_batch_processes_folder(self,  filename, **kwargs):
+    def move_file_to_batch_processes_folder(self,  filename):
         filename = filename.split('/')[-1]
         print(filename)
 
@@ -91,8 +96,7 @@ class AWSS3Download:
             print(e)
             return False
 
-    def store_transcript(self, audio_filename:str, text: str, **kwargs):
-        
+    def store_transcript(self, audio_filename:str, text: str):
         audio_filename = audio_filename.split('/')[-1]
 
         print("audio_file_name", audio_filename)
@@ -110,7 +114,7 @@ class AWSS3Download:
         os.remove(file_name)
 
 
-    def store_question(self, audio_filename:str, text: str, **kwargs):
+    def store_question(self, audio_filename:str, text: str):
         
         audio_filename = audio_filename.split('/')[-1]
 
@@ -129,25 +133,16 @@ class AWSS3Download:
         os.remove(file_name)
 
 
-    def store_batch_audio_with_transcription(self, audio_file_with_transcribe:dict):
-        for key, value in audio_file_with_transcribe.items():
+    def move_batch_audio_to_processed_folder(self, audio_file_with_transcribe, **kwargs):
+        audio_file_with_transcribe_dict: dict = ast.literal_eval(audio_file_with_transcribe)
+        for key, value in audio_file_with_transcribe_dict.items():
+            self.move_file_to_batch_processes_folder(key)
+
+    def move_batch_audio_with_transcription(self, audio_file_with_transcribe, **kwargs):
+        audio_file_with_transcribe_dict: dict = ast.literal_eval(audio_file_with_transcribe)
+        for key, value in audio_file_with_transcribe_dict.items():
             self.store_transcript(key, value)
 
-    def move_batch_audio_with_transcription(self, audio_file_with_transcribe:dict):
-        for key, value in audio_file_with_transcribe.items():
-            self.store_transcript(key, value)
+    def move_adhoc_audio_with_transcription(self, text: str, **kwargs):
+        self.store_transcript(audio_filename = kwargs['dag_run'].conf.get('audio_file_url'), text= text)
 
-# %%
-# aws = AWSS3Download()
-
-# aws.move_file_to_adhoc_processes_folder("https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3")
-
-# # %%
-# aws.get_all_files()
-# # https://damg-team-5-assignment-4.s3.amazonaws.com/adhoc/podcast_2.mp3
-
-# # %%
-# aws.store_transcript("podcast_2.mp3", "test tims")
-
-
-# %%

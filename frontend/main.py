@@ -1,7 +1,10 @@
 import streamlit as st
-import pandas as pd
+
 import os
 import requests
+
+BASE_URL=os.environ.get('FRONTEND_BASE_URL')
+
 if "visibility" not in st.session_state:
     st.session_state.visibility = "visible"
     st.session_state.disabled = False
@@ -39,7 +42,7 @@ if button_attribute and st.session_state.select:
     print(audio_file.name)
     if st.session_state.select:
         # print("goin into loop")
-        url = 'http://localhost:8000/gpt/upload-audio'
+        url = f'http://{BASE_URL}:8000/gpt/upload-audio'
         headers = {'accept': 'application/json'}
         files = {'file': (audio_file.name, audio_file.read(), 'audio/mpeg')}
         result = requests.post(url, headers= headers, files= files )
@@ -56,7 +59,6 @@ if button_attribute and st.session_state.select:
         elif result.status_code == 400 and audio_file is not None:
             st.warning(output['message'])
 
-
 st.write("\n")
 st.write("\n")
 
@@ -67,7 +69,8 @@ st.write("\n")
 dirname = os.getcwd()
 
 
-result_file_list = requests.get('http://localhost:8000/gpt/processed-audio-files').json()
+
+result_file_list = requests.get(f'http://{BASE_URL}:8000/gpt/processed-audio-files').json()
 
 list_of_dict = result_file_list['files_with_question']
 file_names = []
@@ -89,7 +92,7 @@ st.write("\n")
 st.write("\n")
 if selected_audio_option:
     st.subheader("Generic Questions for above selected file")
-    result_file_list = requests.get('http://localhost:8000/gpt/processed-audio-files').json()
+    result_file_list = requests.get(f'http://{BASE_URL}:8000/gpt/processed-audio-files').json()
     list_of_dict = result_file_list['files_with_question']
     for item in list_of_dict:
         if item['file_name'] == selected_audio_option:
@@ -109,6 +112,6 @@ st.write("\n")
 button_ask_question = st.button('Ask Question', key='but_ask_questn')
 if button_ask_question:
     payload = {'audio_file_name':str(selected_audio_option),'question':text_query}
-    output = requests.get("http://localhost:8000/gpt/question-transcript", params = payload).json()
+    output = requests.get(f"http://{BASE_URL}:8000/gpt/question-transcript", params = payload).json()
     st.write(output["responded_answer"])
 
