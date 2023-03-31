@@ -20,9 +20,13 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
 5. Inside backend folder, create an .env file containing the following values
    .env
    AIRFLOW_UID=50000
+ 
    OPEN_AI_API_KEY=<openai_api_key>
+   
    AWS_ACCESS_KEY=<aws_access_key>
+   
    AWS_SECRET_KEY=<aws_secret_key>
+   
    S3_BUCKET_NAME=<s3_bucket_name>
    
 # Installation
