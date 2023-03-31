@@ -75,5 +75,5 @@ def get_transcribed_audio_text(audio_file_name:str):
     if len(content) == 0:
         return None
     else:
-        return str(content)
+        return str(content,'utf-8')
 
