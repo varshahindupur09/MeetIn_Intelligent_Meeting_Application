@@ -17,7 +17,7 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
 2. Docker Desktop Application
 3. AWS access and secret keys
 4. OpenAI (Chat GPT) API key
-5. Inside backend folder, create an .env file containing the following values
+5. Create an .env file in the main directory containing the following information
    .env
    AIRFLOW_UID=50000
  
