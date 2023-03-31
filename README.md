@@ -9,7 +9,7 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
 
 ** FastAPI: ** http://ec2-52-45-138-255.compute-1.amazonaws.com:8000/docs
 
-** Codelabs: ** https://docs.google.com/document/d/1KwFY_zq4X5mGg0K8itpnN3hzrCtn11xF6HUpXBjeMa0/edit?usp=sharing
+** Codelabs: ** https://codelabs-preview.appspot.com/?file_id=1KwFY_zq4X5mGg0K8itpnN3hzrCtn11xF6HUpXBjeMa0#0
 
 ## To execute this project, you will need:
 
@@ -56,7 +56,7 @@ Once the questioning is complete, the application will provide you with answers 
 
 
 ## Architecture diagram
-<img src="https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04/blob/main/arch-diag.png">
+<img src="https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04/blob/main/ArchDiag.png">
 
 
 ## Project Directory Structure
