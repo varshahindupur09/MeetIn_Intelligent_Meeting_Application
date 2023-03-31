@@ -29,6 +29,9 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
    
    S3_BUCKET_NAME=<s3_bucket_name>
    
+## sample.env (refer to this)
+<img src="https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04/blob/main/sample.env">
+   
 ## Installation
 1. Clone the repository (https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04.git)
 2. Create .env in 'Backend' (Streamlit & Fast API folder) and 'Airflow' which will contain the access keys to AWS S3 bucket and Airflow UID using the commands below: mkdir -p ./dags ./logs ./plugins echo -e "AIRFLOW_UID=$(id -u)" > .env
