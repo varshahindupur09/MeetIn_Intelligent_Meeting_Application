@@ -48,7 +48,6 @@ with dag:
     transcribe_audio = PythonOperator(
         task_id='transcribe_audio',
         python_callable= audio_transcribe.transcribe_adhoc_audio_link,
-        op_kwargs={"audio_file_url": "{{ ti.xcom_pull(task_ids='get_audio_file_from_s3') }}"},
         provide_context=True,
         do_xcom_push=True,
         dag=dag,
@@ -56,8 +55,8 @@ with dag:
 
     moving_transcription_to_aws_bucket = PythonOperator(
         task_id='moving_transcription_to_aws_bucket',
-        python_callable= aws_cloud.store_transcript,
-        op_kwargs={"audio_filename": "{{ ti.xcom_pull(task_ids='get_audio_file_from_s3')}}", "text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
+        python_callable= aws_cloud.move_adhoc_audio_with_transcription,
+        op_kwargs={"text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
         provide_context=True,
         dag=dag,
     )
@@ -65,7 +64,6 @@ with dag:
     moving_audio_file_to_proccessd_aws_bucket = PythonOperator(
         task_id='moving_audio_file_to_proccessd_aws_bucket',
         python_callable= aws_cloud.move_file_to_adhoc_processes_folder,
-        op_kwargs={"filename": "{{ ti.xcom_pull(task_ids='get_audio_file_from_s3')}}"},
         provide_context=True,
         dag=dag,
     )
@@ -74,7 +72,7 @@ with dag:
     generate_default_questions_for_transcription = PythonOperator(
         task_id='generate_default_questions_for_transcription',
         python_callable= open_ai_gpt.generate_questions_for_transcribed_text,
-        op_kwargs={"filename": "{{ ti.xcom_pull(task_ids='get_audio_file_from_s3')}}", "text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
+        op_kwargs={"text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
         provide_context=True,
         dag=dag,
     )

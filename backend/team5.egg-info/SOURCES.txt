@@ -4,8 +4,6 @@ awscloud/cloudwatch/__init__.py
 awscloud/cloudwatch/logger.py
 awscloud/s3/__init__.py
 awscloud/s3/audio.py
-openai/__init__.py
-openai/gpt.py
 repository/__init__.py
 repository/gpt.py
 routers/__init__.py
@@ -14,5 +12,8 @@ team5.egg-info/PKG-INFO
 team5.egg-info/SOURCES.txt
 team5.egg-info/dependency_links.txt
 team5.egg-info/top_level.txt
+util_openai/__init__.py
+util_openai/gpt.py
 utils/__init__.py
+utils/airflow_dag.py
 utils/logger.py

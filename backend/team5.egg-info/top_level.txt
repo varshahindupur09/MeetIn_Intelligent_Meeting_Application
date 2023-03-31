@@ -1,5 +1,5 @@
 awscloud
-openai
 repository
 routers
+util_openai
 utils

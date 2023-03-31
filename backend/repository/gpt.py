@@ -3,12 +3,14 @@ from awscloud.cloudwatch.logger import audio_files_requested_by_user, question_a
 from util_openai.gpt import OpenAIUtil
 from fastapi import status
 from fastapi.responses import JSONResponse
+from utils.airflow_dag import trigger_airflow_adhoc_dag
 
 def upload_audio_file_to_s3(file):
-    is_uploaded = audio.upload_file_to_adhoc(file= file)
+    upload_file_name = audio.upload_file_to_adhoc(file= file)
 
-    if is_uploaded is True:
-        file_uploaded_by_user(file_name= file.filename)
+    if upload_file_name != None:
+        trigger_airflow_adhoc_dag(file_name= upload_file_name)
+        file_uploaded_by_user(file_name= upload_file_name)
         return JSONResponse(
             content={
                 'success': True, 

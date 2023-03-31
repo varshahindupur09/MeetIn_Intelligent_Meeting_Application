@@ -1,7 +1,10 @@
 import streamlit as st
-import pandas as pd
+
 import os
 import requests
+
+BASE_URL=os.environ.get('FRONTEND_BASE_URL')
+
 if "visibility" not in st.session_state:
     st.session_state.visibility = "visible"
     st.session_state.disabled = False
@@ -36,7 +39,7 @@ if audio_file is not None:
     st.audio(audio_file, format='audio/mp3')
 
 if button_attribute:
-    url = 'http://localhost:8000/gpt/upload-audio'
+    url = f'http://{BASE_URL}:8000/gpt/upload-audio'
     headers = {'accept': 'application/json'}
     # file_contents = audio_file.read()
     # data = {'file' : file_contents}
@@ -64,11 +67,7 @@ st.write("\n")
 # link to the audio files and read the audio files
 dirname = os.getcwd()
 
-meet_file_1= dirname + "/data/audio_1.mp3"
-meet_file_2= dirname + "/data/audio_2.mp3"
-meet_file_3= dirname + "/data/meet_random.mp3"
-meet_file_4= dirname + "/data/audio_meet_v.mp3"
-result_file_list = requests.get('http://localhost:8000/gpt/processed-audio-files').json()
+result_file_list = requests.get(f'http://{BASE_URL}:8000/gpt/processed-audio-files').json()
 
 list_of_dict = result_file_list['files_with_question']
 file_names = []
@@ -90,7 +89,7 @@ st.write("\n")
 st.write("\n")
 if selected_audio_option:
     st.subheader("Generic Questions for above selected file")
-    result_file_list = requests.get('http://localhost:8000/gpt/processed-audio-files').json()
+    result_file_list = requests.get(f'http://{BASE_URL}:8000/gpt/processed-audio-files').json()
     list_of_dict = result_file_list['files_with_question']
     for item in list_of_dict:
         if item['file_name'] == selected_audio_option:
@@ -110,6 +109,6 @@ st.write("\n")
 button_ask_question = st.button('Ask Question', key='but_ask_questn')
 if button_ask_question:
     payload = {'audio_file_name':str(selected_audio_option),'question':text_query}
-    output = requests.get("http://localhost:8000/gpt/question-transcript", params = payload).json()
+    output = requests.get(f"http://{BASE_URL}:8000/gpt/question-transcript", params = payload).json()
     st.write(output["responded_answer"])
 
