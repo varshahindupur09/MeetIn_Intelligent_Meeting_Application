@@ -35,7 +35,7 @@ Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipelin
    AIRFLOW_BASE_URL=airflow-webserver
    
 ## sample.env (refer to this)
-<img src="https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04/blob/main/sample.env">
+<img src="https://github.com/BigDataIA-Spring2023-Team-05/Assignment-04/blob/main/env%20sample.jpeg">
 
    
 ## Installation
