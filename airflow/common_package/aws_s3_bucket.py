@@ -19,6 +19,7 @@ class AWSS3Download:
         
 
         self.processed_text_folder_name = 'processed-text/'
+        self.default_question_folder_name = 'default-questions/'
 
         session = boto3.Session(
             region_name='us-east-1',
@@ -105,6 +106,25 @@ class AWSS3Download:
         file.close()
 
         self.src_bucket.upload_file(file_name, self.processed_text_folder_name + file_name)
+
+        os.remove(file_name)
+
+
+    def store_question(self, audio_filename:str, text: str, **kwargs):
+        
+        audio_filename = audio_filename.split('/')[-1]
+
+        print("audio_file_name", audio_filename)
+        print("generate_question", text)
+
+
+        file_name = audio_filename.split(".")[0] + ".txt"
+
+        file = open(file_name, 'w')
+        file.write(text)
+        file.close()
+
+        self.src_bucket.upload_file(file_name, self.default_question_folder_name + file_name)
 
         os.remove(file_name)
 

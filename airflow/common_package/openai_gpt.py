@@ -2,6 +2,7 @@
 import openai
 # from dotenv import load_dotenv
 import os
+from aws_s3_bucket import AWSS3Download
 
 # %%
 # load_dotenv()
@@ -13,7 +14,7 @@ class OpenAIGPT:
     def __init__(self) -> None:
         openai.api_key = os.environ.get('OPEN_AI_API_KEY')
 
-    def generate_questions_for_transcribed_text(self, text, **kwargs) -> str:
+    def generate_questions_for_transcribed_text(self, filename, text, **kwargs) -> str:
         text = 'content ="'+ text +'."'+ "Ask 4 questions about this given content."
 
         completion = openai.ChatCompletion.create(
@@ -23,14 +24,17 @@ class OpenAIGPT:
                 ],
                 temperature = 0.75
             )
+        
 
+        AWSS3Download().store_question(audio_filename= filename, text= completion.choices[0].message.content)
         print(completion.choices[0].message.content)
         return completion.choices[0].message.content
+    
 
 
-    def geenrate_questions_for_adhoc(self, audio_file_with_transcribe: dict):
-         for key, value in audio_file_with_transcribe.items():
-            self.generate_questions_for_transcribed_text(value)
+    # def genrate_questions_for_adhoc(self, audio_file_with_transcribe: dict):
+    #      for key, value in audio_file_with_transcribe.items():
+    #         self.generate_questions_for_transcribed_text(value)
 
 
 # %%

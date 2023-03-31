@@ -51,7 +51,29 @@ def get_processed_audio_files() -> list:
     for object_summary in src_bucket.objects.filter(Prefix=  f'processed-audio/'):
         file_name = object_summary.key.split('/')[-1]
         if file_name != "":
-            all_files.append(file_name)
+            data = s3_client.get_object(Bucket = aws_bucket_name, Key = f"default-questions/{file_name.rsplit('.', 1)[0]}.txt")
+            
+            contents = data['Body'].read()
+            
+            all_files_with_default_question = dict()
+
+            all_files_with_default_question["file_name"] = file_name
+            all_files_with_default_question["default_question"] = contents.decode("utf-8")
+
+            all_files.append(all_files_with_default_question)
 
     
     return all_files
+
+
+def get_transcribed_audio_text(audio_file_name:str):
+    
+    data = s3_client.get_object(Bucket = aws_bucket_name, Key = f"processed-text/{audio_file_name.rsplit('.', 1)[0]}.txt")
+
+    content = data['Body'].read()
+
+    if len(content) == 0:
+        return None
+    else:
+        return str(content)
+

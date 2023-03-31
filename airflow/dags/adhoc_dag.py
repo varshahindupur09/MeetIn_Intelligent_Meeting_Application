@@ -74,7 +74,7 @@ with dag:
     generate_default_questions_for_transcription = PythonOperator(
         task_id='generate_default_questions_for_transcription',
         python_callable= open_ai_gpt.generate_questions_for_transcribed_text,
-        op_kwargs={"text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
+        op_kwargs={"filename": "{{ ti.xcom_pull(task_ids='get_audio_file_from_s3')}}", "text": "{{ ti.xcom_pull(task_ids='transcribe_audio')}}"},
         provide_context=True,
         dag=dag,
     )
