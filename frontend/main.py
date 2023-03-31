@@ -6,54 +6,56 @@ if "visibility" not in st.session_state:
     st.session_state.visibility = "visible"
     st.session_state.disabled = False
     st.session_state.placeholder = ''
+    st.session_state.select = True
+
 # Heading of the webpage
 st.write("# Welcome to MeetIn! 👋")
-st.text("This is an example of Model as Service.")
-st.subheader(' This is a a Meeting Intelligence Application. We will be helping you with your audio transcribing and generate some questions based on the selected audio data.')
-
-st.write('\n')
-st.write('\n')
-
-# Set up the app layout
-col1, col2 = st.columns([5, 2])
-
-st.write("\n")
-st.write("\n")
-
+st.text("Ask questions from any audio file of your choice !")
+# st.subheader(' This is a a Meeting Intelligence Application. We will be helping you with your audio transcribing and generate some questions based on the selected audio data.')
 # Attach audio file
-with col1:
-    st.subheader("Attach Audio File")
-    audio_file = st.file_uploader("Choose an audio file", type=["mp3"])
+with st.form("my-form", clear_on_submit=True):
+        audio_file = st.file_uploader("Choose an audio file", type=["mp3"])
+        button_attribute = st.form_submit_button("Upload :arrow_up:")
+    # st.subheader("Attach Audio File")
+    
+
     # if audio_file:
     #     print(audio_file.name)
 # Upload file to S3 bucket AWS
-with col2:
-    st.subheader("Upload file to S3 bucket")
-    button_attribute = st.button("Click me!")
-    
-# Do something with the uploaded file and button attribute
+
+    # st.subheader("To AWS !")
 if audio_file is not None:
+    st.write("Selected Audio File :small_red_triangle_down:") 
     st.audio(audio_file, format='audio/mp3')
+    st.session_state.select = True
+else:
+    st.warning("Please select Audio file")
+    st.session_state.select = False
 
-if button_attribute:
-    url = 'http://localhost:8000/gpt/upload-audio'
-    headers = {'accept': 'application/json'}
-    # file_contents = audio_file.read()
-    # data = {'file' : file_contents}
 
-    print(audio_file)
-    files = {'file': (audio_file.name, audio_file.read(), 'audio/mpeg')}
-    result = requests.post(url, headers= headers, files= files )
-    
-    output = result.json()
-    print("-----------------------------")
+if button_attribute and st.session_state.select:
+    # audio_file = st.session_state['audio_file']
+    # st.session_state['audio_file'] = None
+    print(audio_file.name)
+    if st.session_state.select:
+        # print("goin into loop")
+        url = 'http://localhost:8000/gpt/upload-audio'
+        headers = {'accept': 'application/json'}
+        files = {'file': (audio_file.name, audio_file.read(), 'audio/mpeg')}
+        result = requests.post(url, headers= headers, files= files )
+        
+        output = result.json()
+        print("-----------------------------")
 
-    print(result.status_code)
-    print(output)
-    # print(output['success'])
-    if result.status_code == 200 :
-    
-        st.write("Audio Uploaded!")
+        print(result.status_code)
+        print(output)
+        # print(output['success'])
+        if result.status_code == 200 and audio_file is not None:
+            st.success("Audio Uploaded!")
+            st.session_state.select = True
+        elif result.status_code == 400 and audio_file is not None:
+            st.warning(output['message'])
+
 
 st.write("\n")
 st.write("\n")
@@ -64,10 +66,7 @@ st.write("\n")
 # link to the audio files and read the audio files
 dirname = os.getcwd()
 
-meet_file_1= dirname + "/data/audio_1.mp3"
-meet_file_2= dirname + "/data/audio_2.mp3"
-meet_file_3= dirname + "/data/meet_random.mp3"
-meet_file_4= dirname + "/data/audio_meet_v.mp3"
+
 result_file_list = requests.get('http://localhost:8000/gpt/processed-audio-files').json()
 
 list_of_dict = result_file_list['files_with_question']
