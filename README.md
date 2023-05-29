@@ -1,15 +1,13 @@
 # ASSIGNMENT 4
 Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipeline was developed for this research can transcribe audio recordings and produce spoken transcripts. The GPT-3.5 Turbo model can also be used by the project to respond to user-posted default and custom questions.
 
-## Links to the Live application
+## Links to the Live application 
 
 ** Airflow: ** http://ec2-52-45-138-255.compute-1.amazonaws.com:8080/
 
 ** Streamlit: ** http://ec2-52-45-138-255.compute-1.amazonaws.com/
 
 ** FastAPI: ** http://ec2-52-45-138-255.compute-1.amazonaws.com:8000/docs
-
-** Codelabs: ** https://codelabs-preview.appspot.com/?file_id=1KwFY_zq4X5mGg0K8itpnN3hzrCtn11xF6HUpXBjeMa0#0
 
 ## To execute this project, you will need:
 
