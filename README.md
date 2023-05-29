@@ -1,5 +1,5 @@
-# ASSIGNMENT 4
-Introducing MeetIn - a Meeting Intelligence Application. A voice-to-text pipeline was developed for this research can transcribe audio recordings and produce spoken transcripts. The GPT-3.5 Turbo model can also be used by the project to respond to user-posted default and custom questions.
+# Introducing MeetIn - a Meeting Intelligence Application
+A voice-to-text pipeline was developed for this research can transcribe audio recordings and produce spoken transcripts. The GPT-3.5 Turbo model can also be used by the project to respond to user-posted default and custom questions.
 
 ## Links to the Live application 
 
